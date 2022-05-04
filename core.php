@@ -1,7 +1,13 @@
 <?php
 
-if(isset($_POST['domain'])){
     $domain = trim(preg_replace('/\s+/',' ', $_POST['domain']));
+
+    if(!$_POST['domain'] || !$domain){
+        exit(json_encode(array(
+                'code' => false,
+                'status' => 'Không được để trống'
+        )));  
+    }
 
     $headers = array(
         "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -15,22 +21,23 @@ if(isset($_POST['domain'])){
     curl_setopt($ch, CURLOPT_URL, "https://whois.inet.vn/api/whois/domainspecify/".$domain);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     $data = curl_exec($ch);
     curl_close($ch);
     $json = json_decode($data);
 
     if($json->code == 0){
-    exit(json_encode(array(
-            'code' => true,
-            'domain' => $domain,
-            'status' => $json->status[0],
-            'register' => $json->registrar
-    )));  
+        exit(json_encode(array(
+                'code' => true,
+                'domain' => $domain,
+                'status' => $json->status[0],
+                'register' => $json->registrar
+        )));  
     }else{
-    exit(json_encode(array(
-            'code' => false,
-            'status' => $domain.' '.$json->message
-    )));  
+        exit(json_encode(array(
+                'code' => false,
+                'status' => $domain.' '.$json->message
+        )));  
     }
-}
+
 ?>
