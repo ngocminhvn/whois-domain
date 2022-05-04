@@ -1,5 +1,5 @@
 <?php
-
+    // Loại bỏ kí tự trắng
     $domain = trim(preg_replace('/\s+/',' ', $_POST['domain']));
 
     if(!$_POST['domain'] || !$domain){
@@ -27,6 +27,7 @@
     $json = json_decode($data);
 
     if($json->code == 0){
+        // tự code thêm các result khác
         exit(json_encode(array(
                 'code' => true,
                 'domain' => $domain,
