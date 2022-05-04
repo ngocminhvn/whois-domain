@@ -2,6 +2,15 @@
 
 if(isset($_POST['domain'])){
     $domain = trim(preg_replace('/\s+/',' ', $_POST['domain']));
+    
+    if(!preg_match('/^([a-z0-9])*(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i', $domain) {
+        exit(json_encode(array(
+                'code' => false,
+                'status' => $domain.' '.'không phải là tên miền';
+        )));  
+    }
+    
+    
     $headers = array(
         "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
         "Accept-Language: vi-VN,vi;q=0.9,fr-FR;q=0.8,fr;q=0.7,en-US;q=0.6,en;q=0.5",
